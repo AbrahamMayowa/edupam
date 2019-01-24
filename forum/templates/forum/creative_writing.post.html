@@ -1,0 +1,27 @@
+{% extends 'coursematerial/section.html' %}
+
+{% block title %} Creative Writing {% endblock %}
+
+{% block content %}
+{% for post in creative_writing_posts %}
+    {{ post.title }}
+    {{ post.author }}
+{% endfor %}
+
+<div>
+        {% if creative_writing_posts.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ creative_writing_posts.previous_page_number }}">previous</a>
+        {% endif %}
+<span>
+Page {{ creative_writing_posts.number }} of {{ creative_writing_posts.paginator.num_pages }}.
+</span>
+        {% if creative_writing_posts.has_next %}
+            <a href="?page={{ creative_writing_posts.next_page_number }}">next</a>
+            <a href="?page={{ creative_writing_posts.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+</span>
+</div>
+
+
+{% endblock %}

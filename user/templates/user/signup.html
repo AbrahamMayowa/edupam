@@ -1,0 +1,17 @@
+{% extends "coursematerial/section.html" %}
+
+{% block title %} Sign Up {% endblock %}
+{% block content %}
+{% load socialaccount %}
+
+<div>
+    You can sign up through facebook Sign up through facebook
+    <a href="{% provider_login_url "facebook" method="oauth2" %}">Facebook Sign up</a>
+</div>
+<form action=" " method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Sign Up</button>
+
+</form>
+{% endblock %}

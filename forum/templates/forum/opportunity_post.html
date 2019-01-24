@@ -1,0 +1,27 @@
+{% extends 'coursematerial/section.html' %}
+
+{% block title %} Opportunity {% endblock %}
+
+{% block content %}
+{% for post in opportunity_posts %}
+    {{ post.title }}
+    {{ post.author }}
+{% endfor %}
+
+<div>
+        {% if opportunity_posts.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ opportunity_posts.previous_page_number }}">previous</a>
+        {% endif %}
+<span>
+Page {{ opportunity_posts.number }} of {{ opportunity_posts.paginator.num_pages }}.
+</span>
+        {% if opportunity_posts.has_next %}
+            <a href="?page={{ opportunity_posts.next_page_number }}">next</a>
+            <a href="?page={{ opportunity_posts.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+</span>
+</div>
+
+
+{% endblock %}

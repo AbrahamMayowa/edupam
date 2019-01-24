@@ -1,0 +1,21 @@
+{% extends "coursematerial/base.html" %}
+{% block title %}Content{% endblock %}
+
+<div>
+
+    {% block content %}
+    <a href="{% url 'content_main' user.id %}">{{ content_data.author }}</a>
+    {{ content_data.title}}
+    <p>
+        {{ content_data.content|safe }}
+    </p>
+    <p>
+        {% if request.user == content_data.author %}
+            <a href="{% url 'edit_content' pk=content_data.pk %}">Edit your content</a>
+        {% endif %}
+    </p>
+
+</div>
+
+
+{% endblock %}

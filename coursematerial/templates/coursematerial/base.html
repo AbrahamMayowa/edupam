@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Home{% endblock %}</title>
+</head>
+<body>
+<div id="main_header">
+    <hi>EduPam</hi>
+
+</div>
+<div id="header">
+    <ul>
+        <li><a href="#">Course Material</a></li>
+        <li><a href="#">Scholar Forum</a></li>
+        <li><a href="#">Calculate Grade</a></li>
+        <li><a href="#">Life After School</a></li>
+        <li><a href="#">Life Opportunity</a></li>
+        <li><a href="#">Calculate Grade</a></li>
+        <li><a href="#">Admission Info</a></li>
+        <li><a href="#">Aspirant Forum</a></li>
+
+    </ul>
+</div>
+
+<div id="search_box">
+    {% block search_box %}
+    <h2>
+        Search here:
+    </h2>
+
+    {% endblock %}
+
+</div>
+
+
+<div id="content">
+    {% block content %}
+
+    {% endblock %}
+</div>
+</body>
+</html>

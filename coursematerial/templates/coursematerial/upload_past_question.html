@@ -1,0 +1,18 @@
+{% extends "coursematerial/section.html" %}
+
+{% block title %}Past Question{% endblock %}
+
+{% block page_header %}
+<h2>Upload Past Question</h2>
+{% endblock %}
+
+
+<div>
+{% block content %}
+<form action=" " method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Submit Here">
+</form>
+{% endblock %}
+</div>

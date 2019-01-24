@@ -1,0 +1,9 @@
+{% extends 'coursematerial/base.html' %}
+{% block content %}
+ <form method="post" action=" " enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.media }}
+        {{ form }}
+        <input type="submit" value="Submit Draft">
+    </form>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "coursematerial/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %} Award {% endblock %}
+{% block content %}
+
+<h1>
+    {{ new_award.award_name }}
+</h1>
+
+<P>
+    Vote end on {{new_award.vote_end}}
+    There are {{ new_award.category_set.all.count }}
+</P>
+
+<p>
+<h2>
+    Create contestants for the award
+</h2>
+
+<form action=" " method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ formset.management_form }}
+    {{ formset }}
+    <input type="submit" value="save">
+
+</form>
+
+{% endblock %}

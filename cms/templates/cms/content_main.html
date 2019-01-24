@@ -1,0 +1,20 @@
+{% extends "coursematerial/base.html" %}
+{% block title %} {{top_new_post.author}} {% endblock %}
+
+{% block content %}
+
+<div>
+    <p>
+
+    </p>
+
+</div>
+
+<div>
+        {% for post in user_content %}
+            <li>{{ post.title }}</li>
+        {% endfor %}
+</div>
+
+
+{% endblock %}
