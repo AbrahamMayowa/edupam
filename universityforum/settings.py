@@ -94,9 +94,9 @@ WSGI_APPLICATION = 'universityforum.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'schooldata',
-        'USER': 'postgres',
-        'PASSWORD': 'mayor@360',
+        'NAME': 'school_data',
+        'USER': 'school_maintenance',
+        'PASSWORD': 'mayor',
         'HOST': '127.0.0.1',
         'PORT': '5432',
     }
