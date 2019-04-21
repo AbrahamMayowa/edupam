@@ -94,7 +94,7 @@ WSGI_APPLICATION = 'universityforum.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'school_data',
+        'NAME': 'school_project',
         'USER': 'school_maintenance',
         'PASSWORD': 'mayor',
         'HOST': '127.0.0.1',
@@ -142,9 +142,13 @@ USE_TZ = True
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)
+
 
 MEDIA_ROOT = 'media/'
-STATIC_ROOT = 'static/'
+STATIC_ROOT = 'staticfiles/'
 
 
 LOGIN_REDIRECT_URL = 'home'

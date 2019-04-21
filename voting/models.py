@@ -6,16 +6,16 @@ from django.conf import settings
 class Award(models.Model):
     organisation = models.CharField(max_length=200, blank=True, null=True)
     award_name = models.CharField(max_length=200)
-    starting = models.DateField(auto_now_add=True)
+    starting = models.DateField()
     vote_end = models.DateField()
-    voting_nature = models.BooleanField(default=False)
+    multiple_vote = models.BooleanField(default=True)
 
     def __str__(self):
         return self.award_name
 
 
 class Category(models.Model):
-    award = models.ForeignKey(Award, on_delete=models.CASCADE)
+    award = models.ForeignKey(Award, on_delete=models.CASCADE, related_name='awards')
     award_category = models.CharField(max_length=150, blank=True, null=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
@@ -29,9 +29,9 @@ class Voters(models.Model):
 
 
 class Contestant(models.Model):
-    award_name = models.ForeignKey(Award, on_delete=models.CASCADE)
+    award_name = models.ForeignKey(Award, on_delete=models.CASCADE, related_name='contestant_awards')
     contestant_name = models.CharField(max_length=150, null=True, blank=True )
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='contestants')
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='categories')
     vote = models.IntegerField()
 
     def number_of_vote(self):

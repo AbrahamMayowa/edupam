@@ -1,0 +1,27 @@
+{% extends "coursematerial/base.html" %}
+
+{% block title %} Create More Category {% endblock %}
+
+<div>
+    Your award category and list of contestands have been successfully created
+</div>
+
+<div>
+    {{ the_award.award_name }}
+    {% for category in the_award.award_category %}
+        {{ category }}
+
+    {% endif %}
+</div>
+
+<div>
+    <a href="{% url 'category_and_contestant' pk=the_award.pk %}">Create More Category</a>
+    <p>
+        If all award categories and contestants have been create, Click here to save and start the campaign</a>
+    </p>
+</div>
+
+{% block content %}
+
+
+

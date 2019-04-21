@@ -10,6 +10,8 @@ urlpatterns = [
     path('award/category/<int:pk>/', views.category_details, name='category_details'),
     path('award_details/<int:pk>/', views.award_details, name='award_details'),
     path('get_award/<int:pk>/', views.get_award, name='get_award'),
+    path('more_categories/<int:pk>/', views.create_more, name='create_more'),
+    path('category_form/<int:pk>/', views.category_and_contestant, name='category_and_contestant'),
 
 
 ]

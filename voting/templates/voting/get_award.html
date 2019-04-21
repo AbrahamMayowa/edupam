@@ -4,26 +4,36 @@
 {% block title %} Award {% endblock %}
 {% block content %}
 
-<h1>
-    {{ new_award.award_name }}
-</h1>
+# will create link to dashboard here
+>Return the dashboard to manage all your campaign   
+</h3>
+
 
 <P>
-    Vote end on {{new_award.vote_end}}
-    There are {{ new_award.category_set.all.count }}
+    Vote end on {{award_detail.vote_end}}
+    {% if award_detail.category_set.all %}
+
+        There are {{ award_detail.category_set.all.count }}
+
+        {% for category in award_detail.category_set.all %}
+            {{ category }}
+
+        {% endfor %}
+
+    {% endif %}
 </P>
 
 <p>
-<h2>
-    Create contestants for the award
-</h2>
+    The voting end on {{ award_detail.vote_end}}
+</p>
 
-<form action=" " method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ formset.management_form }}
-    {{ formset }}
-    <input type="submit" value="save">
+<p>
+    <a href="{% url 'category_and_contestant' pk=award_detail.pk %}">Create category and contestants</a>
+</p>
 
-</form>
+<p>
+    Start the 
+</p>
+
 
 {% endblock %}

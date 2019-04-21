@@ -69,6 +69,10 @@
 {% if user.is_authenticated %}
     Welcome {{ user.username }}
     <h3><a href="{% url 'post_form' %}">Post a comment here</a></h3>
+
+    <div>
+        <a href="{% url 'award_view' %}">Creata secure, free and fair voting Campaign</a>
+    </div>
     <p>
         <a href="{% url 'logout' %}"><b>Log out</b></a>
     </p>
