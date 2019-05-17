@@ -1,0 +1,12 @@
+{% extends 'coursematerial/base.html' %}
+
+{% block title %} me {% endblock %}
+
+{% block content %}
+    {% for entry in all_profile_content %}
+
+        {{ entry.title}}
+
+    {% endfor %}
+
+{% endblock %}

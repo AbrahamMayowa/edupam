@@ -68,7 +68,8 @@
     {% load socialaccount %}
 {% if user.is_authenticated %}
     Welcome {{ user.username }}
-    <h3><a href="{% url 'post_form' %}">Post a comment here</a></h3>
+
+    <h3><a href="{% url 'post_form' %}">Create a forum post here</a></h3>
 
     <div>
         <a href="{% url 'award_view' %}">Creata secure, free and fair voting Campaign</a>
