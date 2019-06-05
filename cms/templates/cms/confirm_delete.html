@@ -1,0 +1,16 @@
+{% extends "coursematerial/base.html" %} 
+
+{% block title %}Confirm{% endblock %}
+
+
+{% block content %}
+
+<div>
+   <p>
+       Confirm to delete {{getting_object.title}}
+
+    <a href="{% url 'delete_content' getting_object.pk %}">Confirm</a>
+   </p> 
+</div>
+
+{% endblock %}

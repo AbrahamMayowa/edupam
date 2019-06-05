@@ -1,22 +1,17 @@
 from django.forms import ModelForm
-from .models import Journalism, Comment, CommentReply
+from .models import Journalism, Comment
 
 
 class ContentForm(ModelForm):
 
     class Meta:
         model = Journalism
-        fields = ['title', 'content', 'post_status']
+        fields = ['title', 'content',]
 
 class CommentForm(ModelForm):
     class Meta:
         model = Comment
         fields = ['comment_body']
-
-class CommentReplyForm(ModelForm):
-    class Meta:
-        model = CommentReply
-        fields = ['reply']
 
 
 

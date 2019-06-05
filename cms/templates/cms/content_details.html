@@ -1,21 +1,85 @@
-{% extends "coursematerial/base.html" %}
+{% extends "coursematerial/base.html" %} 
+{% load static %}
 {% block title %} me {% endblock %}
 
-<div>
 
-    {% block content %}
-    <a href="{% url 'curator_profile' content_id=content_data.pk %}">{{ content_data.author }}</a>
+
+
+{% block content %}
+    <div>
+    <a href="{% url 'curator_profile' content_data.pk %}">{{ content_data.author }}</a>
     {{ content_data.title}}
     <p>
         {{ content_data.content|safe }}
+
+    </p>
+    <p>
+        <button type="button" clap_url="{% url 'clap' content_data.id %}" class="js_clap">
+            Clap
+
+        </button>
+        <span class='clapCount'>{{content_data.claps}}</span>
+    
     </p>
     <p>
         {% if request.user == content_data.author %}
             <a href="{% url 'edit_content' content_data.pk content_data.slug %}">Edit your content</a>
+            <a href="{% url 'redirect_delete' content_data.id %}">Delete</a>
         {% endif %}
+        
     </p>
+
 
 </div>
 
+<div>
+    <form method="POST" action="{% url 'content_comment' content_data.pk %}">
+        {% csrf_token %}
+        {{form.as_p}}
+        <button type="submit">Submit</button>
+    </form>
+</div>
+<div>
+{% for comment in comment_list %}
+<div>
+    {{comment.comment_body}}
+</div>
+<div>
+<button type="submit" class='thump_up_js' 
+thump_up_url="{% url 'comment_thump_up' comment.pk %}">
+thum up comment <span class="thumped_up_sign">thumped</span></button> 
+
+<span class="thump_up_count">{{comment.thump_up.count}}</span>
+</div>
+
+</div>
+<div>
+
+</div>
+<div>
+        <button type="submit" class='thump_down_js' 
+        thump_down_url="{% url 'comment_thump_down' comment.pk %}">
+        thum up comment <span class="thumped_down_sign">thumped_down</span></button> 
+        
+        <span class="thump_down_count">{{comment.thump_down.count}}</span>
+        </div>
+<div>
+
+{% empty %}
+<p>
+    No comments
+</p>
+</div>
+{% endfor %}
+
+
+
+</div>
+
+{% endblock %}
+
+{% block part_jquery %}
+<script src="{% static 'jquery/jquery-3.4.0.js' %}"></script>
+<script src="{% static 'cms/cms_ajax.js' %}"></script>
 
 {% endblock %}

@@ -1,0 +1,27 @@
+
+{% extends "coursematerial/base.html" %} 
+{% load static %}
+{% block title %} Modify comment {% endblock %}
+
+{% block content %}
+
+ <form method="POST">
+    {% csrf_token %}
+    {{form.as_p}}
+    <button type="submit">Submit Edit</button>
+</form>
+
+<div>
+    <a href="{% url 'delete_comment' comment_pk=comment_instance.pk journalist_id=journalist_data.pk %}">Delete comment</a>
+</div>
+
+
+
+
+
+
+
+
+
+
+{% endblock %}
