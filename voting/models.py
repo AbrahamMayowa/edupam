@@ -38,6 +38,8 @@ class Contestant(models.Model):
         return Contestant.objects.filter(self.vote).count()
     vote_count = property(number_of_vote)
 
+    
+
 
 
 

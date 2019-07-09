@@ -1,0 +1,4 @@
+{{object.course_code}}
+{{object.course_title}}
+{{object.school_name}}
+{{object.department}}

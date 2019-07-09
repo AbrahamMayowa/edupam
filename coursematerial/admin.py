@@ -1,10 +1,9 @@
 from django.contrib import admin
-from .models import PastQuestion, CourseMaterial, Shares, Download
+from .models import FileUpload, FileReview, CourseFile
 
-admin.site.register(PastQuestion)
-admin.site.register(CourseMaterial)
-admin.site.register(Shares)
-admin.site.register(Download)
+admin.site.register(FileUpload)
+admin.site.register(FileReview)
+admin.site.register(CourseFile)
 
 
 

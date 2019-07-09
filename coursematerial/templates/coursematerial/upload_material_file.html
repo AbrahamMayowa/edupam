@@ -1,0 +1,59 @@
+{% extends "coursematerial/section.html" %}
+{% load static %}
+
+{% block title %}Course Material{% endblock %}
+
+<div>
+<h2>Upload Course Material</h2>
+</div>
+
+
+
+
+{% block content %}
+<div>
+    <p id="success_alert">
+
+
+    </p>
+</div>
+
+<div>
+    {{material_file.course_title}}
+
+</div>
+<div>
+    <button type="button" class="btn btn-primary material-file" 
+    material_redirect_url="{% url 'download_material' material_file.pk %}">
+        <span class="glyphicon glyphicon-cloud-upload"></span> Upload files
+      </button>
+
+      <input id="material-upload" type="file" name="course_file" multiple
+             style="display: none;"
+             data-url="{% url 'material_upload_ajax' material_file.pk %}"
+             data-form-data='{"csrfmiddlewaretoken": "{{ csrf_token }}"}'>
+</div>
+
+<div class="modal fade" id="modal-progress" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Uploading...</h4>
+        </div>
+        <div class="modal-body">
+          <div class="progress">
+            <div class="progress-bar" role="progressbar" style="width: 0%;">0%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
+
+{% block javascript %}
+<script src="{% static 'jquery/jQuery-File-Upload/js/vendor/jquery.ui.widget.js' %}"></script>
+<script src="{% static 'jquery/jQuery-File-Upload/js/jquery.iframe-transport.js' %}"></script>
+<script src="{% static 'jquery/jQuery-File-Upload/js/jquery.fileupload.js' %}"></script>
+<script src="{% static 'coursematerial/file_upload_ajax.js' %}"></script>
+{% endblock %}

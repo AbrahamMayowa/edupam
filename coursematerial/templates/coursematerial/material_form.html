@@ -1,9 +1,17 @@
 {% extends "coursematerial/section.html" %}
 
 {% block content %}
-<form action=" " method="post" enctype="multipart/form-data">
+<form method="post">
     {% csrf_token %}
     {{ form }}
     <input type="submit" value="Submit">
 </form>
+<div>
+    <p>
+        <b>Note</b>
+        fill required information about the course material. On submit the form, you will be redirect to a page to upload
+        image(s) or file(pdf, txt etc) relating to the information.
+    </p>
+</div>
+
 {% endblock %}

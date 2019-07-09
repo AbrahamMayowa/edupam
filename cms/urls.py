@@ -14,7 +14,8 @@ urlpatterns = [
     path('delete/confirm/<int:pk>', views.redirect_delete, name='redirect_delete'),
     path('delete/comment/<int:comment_pk>/<int:journalist_id>', views.delete_comment, name='delete_comment'),
     path('comment/thumpUp/<int:pk>', views.comment_thump_up, name='comment_thump_up'),
-    path('comment/thumpup/<int:pk>', views.comment_thump_down, name='comment_thump_down'),
+    path('comment/thumpdown/<int:pk>', views.comment_thump_down, name='comment_thump_down'),
+    path('comment/edit/<int:comment_id>/<int:journalist_id>', views.edit_comment, name='edit_comment'),
 
 
 ]

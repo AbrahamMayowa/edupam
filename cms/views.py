@@ -17,7 +17,7 @@ from .models import Journalism, Comment
 
 
 # content form
-@login_required(login_url='/user/login/')
+@login_required
 def content_view(request):
     if request.method == 'POST':
         form = ContentForm(request.POST)
@@ -112,7 +112,8 @@ def main_page(request):
         clap_value = 60/100 * single_object.claps
         view_value = 40/100 * single_object.number_of_views
         total_sum = round(clap_value + view_value)
-        single_object.ranking_determination = total_sum
+        single_object.ranking_determination = int(total_sum)
+        single_object.save()
     all_content = journalism_object.order_by('-draft_date')[:3]
     determing_query = journalism_object.order_by('-ranking_determination')
     ranking = determing_query.difference(all_content)
@@ -145,19 +146,21 @@ def comment_view(request, pk):
 def edit_comment(request, comment_id, journalist_id):
     journalist_data = get_object_or_404(Journalism, pk=journalist_id)
     comment_instance = get_object_or_404(Comment, pk=comment_id)
-    if request.user != comment_instance.comment_author or request.user != journalist_data.author:
-        raise PermissionDenied('You are forbidden from editing this comment')
-    elif request.method == 'POST':
-        comment_form_instance = CommentForm(request.POST, instance=comment_instance)
-        if comment_form_instance.is_valid():
-            form_data = comment_form_instance.save(commit=False)
-            form_data.content = journalist_data
-            form_data.comment_date = timezone.now()
-            form_data.comment_author = request.user
-            form_data.save()
-            return redirect('content_details', pk=journalist_data.pk, slug=journalist_data.slug)
-    else:
-        comment_form_instance = CommentForm(instance=comment_instance)
+    try:
+        request.user == comment_instance.comment_author or request.user == journalist_data.author
+        if request.method == 'POST':
+            comment_form_instance = CommentForm(request.POST, instance=comment_instance)
+            if comment_form_instance.is_valid():
+                form_data = comment_form_instance.save(commit=False)
+                form_data.content = journalist_data
+                form_data.comment_date = timezone.now()
+                form_data.comment_author = request.user
+                form_data.save()
+                return redirect('content_details', pk=journalist_data.pk, slug=journalist_data.slug)
+        else:
+            comment_form_instance = CommentForm(instance=comment_instance)
+    except PermissionDenied:
+        raise('You are forbidden from editing this comment')
 
     context = {
         'journalist_data': journalist_data, 
@@ -167,10 +170,11 @@ def edit_comment(request, comment_id, journalist_id):
 
 # i will need to write message framework here
 def delete_comment(request, comment_pk, journalist_id):
-    journalism = get_object_or_404(Journalism, journalist_id=pk)
+    journalism = get_object_or_404(Journalism, pk=journalist_id)
     deleted_comment = get_object_or_404(Comment, pk=comment_pk)
     if request.user == deleted_comment.comment_author or request.user == journalism.author:
         deleted_comment.delete()
+        messages.success(request, 'Your comment deleted!')
     else:
         raise PermissionDenied('Permission denial')
     return redirect('content_details', pk=journalism.pk, slug=journalism.slug)
@@ -206,44 +210,39 @@ def comment_thump_up(request, pk):
     data ={}
     comment = get_object_or_404(Comment, pk=pk)
     user = request.user
-    if user not in comment.thump_up.all():
-        if user not in comment.thump_down.all():
-            comment.thump_up.add(user)
-            data['thumped_up'] = True
-    elif user not in comment.thump_up.all() and user in comment.thump_down.all():
+    if user in comment.thump_down.all():
         comment.thump_down.remove(user)
+    if user not in comment.thump_up.all():
         comment.thump_up.add(user)
         data['thumped_up'] = True
-    elif user in comment.thump_up.all():
+   
+    else:
         comment.thump_up.remove(user)
         data['thumped_up'] = False
 
     numb_of_thump_up = get_object_or_404(Comment, pk=pk)
     data['thump_up_count'] = numb_of_thump_up.thump_up.count()
-    data['thump_up_count'] =numb_of_thump_up.thump_down.count()
+    data['thump_down_count'] =numb_of_thump_up.thump_down.count()
     return JsonResponse(data)
 
 @login_required
 def comment_thump_down(request, pk):
-    data ={}
+    data2 ={}
     comment = get_object_or_404(Comment, pk=pk)
     user = request.user
-    if user not in comment.thump_down.all():
-        if user not in comment.thump_up.all():
-            comment.thump_down.add(user)
-            data['thumped_down'] = True
-    elif user not in comment.thump_down.all() and user in comment.thump_up.all():
+    if user in comment.thump_up.all():
         comment.thump_up.remove(user)
-        comment.thump_down.add(user)
-        data['thumped_down'] = True
-    elif user in comment.thump_down.all():
+    if user not in comment.thump_down.all():
+            comment.thump_down.add(user)
+            data2['thumped_down'] = True
+    else:
         comment.thump_down.remove(user)
-        data['thumped_down'] = False
+        data2['thumped_down'] = False
 
     numb_of_thump_down = get_object_or_404(Comment, pk=pk)
-    data['thump_down_count'] = numb_of_thump_down.thump_down.count()
-    data['thump_up_count'] = numb_of_thump_down.thump_up.count()
-    return JsonResponse(data)
+    data2['thump_down_count'] = numb_of_thump_down.thump_down.count()
+    data2['thump_up_count'] = numb_of_thump_down.thump_up.count()
+    return JsonResponse(data2)
 
 
 

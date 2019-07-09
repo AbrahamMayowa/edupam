@@ -67,7 +67,7 @@
     {% block content %}
     {% load socialaccount %}
 {% if user.is_authenticated %}
-    Welcome {{ user.username }}
+    Welcome <a href="{% url 'user_info' user.pk %}">{{user.username }}</a>
 
     <h3><a href="{% url 'post_form' %}">Create a forum post here</a></h3>
 
@@ -82,9 +82,9 @@
     </p>
 {% else %}
     <p> Sign Up here!
-        Sign up through facebook <a href="{% provider_login_url "facebook" method="oauth2" %}">Facebook Login</a>
+        Sign up through facebook <a href="{% provider_login_url 'facebook' method='oauth2' %}">Facebook Login</a>
         Sign up through google <a href="{% url 'google_login' %}">Google</a>
-        Sign up with Instagram <a href="{% url 'instagram_login' %}">Instagram<a/>
+        Sign up with Instagram <a href="{% url 'instagram_login' %}">Instagram</a>
     </p>
     <p>
        Or Sign up manually here
@@ -95,9 +95,16 @@
     </p>
 {% endif %}
 
+<p>
+    haystack<a href="{% url 'haystack_search' %}">search</a>
+</p>
+
     <p>
         Create an article content <a href="{% url 'contentform' %}">Here</a>
     </p>
+  
+        Upload past question <a href="{% url 'course_file_upload' %}">Here</a>
+    </div>
     {% endblock %}
 </div>
 </body>

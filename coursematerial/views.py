@@ -1,88 +1,131 @@
 from django.http import HttpResponseRedirect, Http404, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic.edit import FormView
-from .forms import FormForQuestion, FormForMaterial, FormForReviewing
-from .models import PastQuestion, CourseMaterial
+from .forms import FileForm, FileReviewForm, FileUploadForm
+from .models import FileUpload, FileReview
 from django.urls import reverse
+from django.forms import modelformset_factory, formset_factory
+from django.contrib.auth.decorators import login_required
+from django.utils import timezone
+from django.core.exceptions import PermissionDenied
+import os
+from django.conf import settings
+from django.http import JsonResponse
+from django.db.models import F
 
 
-# def view for uploading past question
-class FormForPastQuestion(FormView):
-    form_class = FormForQuestion
-    template_name = 'upload_past_question.html'
-    success_url = '#'
-
-    def past_question_form(self, request, *args, **kwargs):
-        form_class = self.get_form_class()
-        form = self.get_form(form_class)
-        image = request.FILES.get_list('image')
-        if form.is_valid():
-            for f in image:
-                f.save()
-            return self.form_valid(form)
-        else:
-            return self.form_invalid(form)
 
 
-# View for uploading course material.
-def form_for_material_view(request):
+# it process past question info's form
+@login_required
+def file_info(request):
     if request.method == 'POST':
-        form = FormForMaterial(request.POST, request.FILE)
+        form = FileForm(request.POST)
         if form.is_valid():
-            form.save()
-            return HttpResponseRedirect('UploadMaterial/')
+            info = form.save(commit=False)
+            info.upload_time = timezone.now()
+            info.uploader = request.user
+            info.save()
+            return redirect('file_upload_view', info.pk)
     else:
-        form = FormForMaterial()
-    return render(request, "coursematerial/material_form.html", {'form': form})
+        form = FileForm()
+    context = {'form':form}
+    return render(request, 'coursematerial/file_info.html', context)
+
+
+# def view for uploading file
+@login_required
+def file_upload_view(request, pk):
+    file_info = get_object_or_404(FileUpload, pk=pk)
+    context = { 
+            'file_info': file_info,}
+ 
+    return render(request, 'coursematerial/upload_file.html', context)
+
+def file_upload_ajax(request, pk):
+    data = {}
+    related_info = get_object_or_404(FileUpload, pk=pk)
+    if request.method == 'POST' and request.user == related_info.uploader:
+        file_form = FileUploadForm(request.POST, request.FILES)
+        if file_form.is_valid():
+            file_data = file_form.save(commit=False)
+            file_data.file_info = related_info
+            file_data.save()
+            data['successful'] = True
+            data['message'] = 'You have successfully uploaded file(s)'
+    else:
+        data['successful'] = False
+        data['message'] = 'File uplaod unsuccessful'
+    return JsonResponse(data)
 
 
 # Past question download page view
-def past_question_view(request, pk):
+def file_detail(request, pk):
+    review_form = FileReviewForm()
     try:
-        past_question_file = PastQuestion.objects.get(pk=pk)
-    except PastQuestion.DoesNotExist:
-        raise Http404("There is no past question for this course. Please upload the question file when you see one!")
+        file_data = FileUpload.objects.get(pk=pk)
+    except FileUpload.DoesNotExist:
+        raise Http404("There is no file for this course. Please upload a file when you see one!")
+    review_list = file_data.course_file.order_by('-upload_time')
     context = {
-        'past_question_file': past_question_file
+        'file_data': file_data,
+        'review_form': review_form,
+        'review_list': review_list
     }
-    return render(request, "coursematerial/download_past_question.html", context)
+    return render(request, "coursematerial/course_details.html", context)
+
+
+
+# this view process request for past question image download
+def file_download(request, path, pk):
+    """ this function fetch file url and automatically download it 
+     and it also increase number of download field of the object"""
+    get_file_object = get_object_or_404(FileUpload, pk=pk)
+    file_path = os.path.join(settings.MEDIA_ROOT, path)
+    if os.path.exists(file_path):
+        get_file_object.time_of_download = F('time_of_download') + 1
+        get_file_object.save()
+        with open(file_path, 'rb') as fh:
+            response = HttpResponse(fh.read(), content_type="application/force-download")
+            response['Content-Disposition'] = 'attachment; filename=' + 'edupam.com/' + os.path.basename(file_path)
+            return response
+    raise Http404('He file is non-exist or deleted')
 
 
 # review of past question
-def question_review_form(request):
+@login_required
+def file_review(request, pk):
+    file_data = get_object_or_404(FileUpload, pk=pk)
     if request.method == 'POST':
-        form_of_review = FormForReviewing(request.POST)
-        if form_of_review.is_valid():
-            form_of_review.save()
-            return HttpResponseRedirect('download_question', pk=PastQuestion.pk)
+        review_form = FileReviewForm(request.POST)
+        if review_form.is_valid():
+            review_save = review_form.save(commit=False)
+            review_save.course_file = file_data
+            review_save.review_author = request.user
+            review_save.save()
+            return redirect('file_detail', file_data.pk)
     else:
-        form_of_review = ()
-    return render(request, "coursematerial/download_past_question.html", {'form_of_review': form_of_review})
+        review_form = FileReviewForm()
+    return render(request, 'coursematerial/course_details.html', {'review_form':review_form})
 
 
-# Edit the review
-def edit_review_question(request, pk):
-    form = get_object_or_404(PastQuestion, pk=pk)
-    if request.method == 'POST':
-        form = FormForReviewing(request.POST)
+@login_required
+def edit_file_review(request, question_id, review_id):
+    get_course = get_object_or_404(FileUpload, pk=question_id)
+    get_review = get_object_or_404(FileReview, pk=review_id)
+    if request.user == get_review.review_author and request.method == 'POST':
+        form = FileReviewForm(request.POST, instance=get_review)
         if form.is_valid():
-            form.save()
-            return HttpResponseRedirect('download_question', pk=PastQuestion.pk)
+            form_data = form.save(commit=False)
+            form_data.course_file = get_course
+            form_data.review_author = request.user
+            form_data.save()
+            return redirect('file_detail', get_course.pk)
     else:
-        form = FormForReviewing(instance=form)
-    return render(request, "coursematerial/question_review_edit", {'form': form})
+        form = FileReviewForm(instance=get_review)
+    return render(request, "coursematerial/file_review_edit.html", {'form': form})
 
-
-# Course Material download
-def download_material(request, pk):
-    try:
-        material_list = CourseMaterial.objects.get(pk=pk)
-    except CourseMaterial.DoesNotExist:
-        raise Http404('The material is not available. Kindly upload one if you later have it')
-    context = {
-        'material_list': material_list
-    }
-    return render(request, "coursematerial/download_material.html", context)
+    
 
 
 
@@ -90,4 +133,6 @@ def download_material(request, pk):
 
 
 
-# Create your views here.
+
+
+# Create your views here.   

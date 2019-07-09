@@ -35,8 +35,12 @@ $(document).ready(function(){
        // serialize the form dat
          var url = $(this).attr('thump_up_url');
          var $clickCommentButton = $(this);
-         var $clickButtonSign = $clickCommentButton.find('.thumped_up_sign');
-         var $clickButtonSibilings = $clickCommentButton.siblings('.thump_up_count');
+         var $clickThumpUpButtonSign = $clickCommentButton.find('.thumped_up_sign');
+         var $clickThumpUpButtonSiblings = $clickCommentButton.siblings('.thump_up_count');
+         var $clickThumpDownButtonSiblings = $clickCommentButton.siblings('.thump_down_count');
+         var $clickThumpDownButtonSign = $clickCommentButton.find('.thumped_down_sign');
+         console.log($clickCommentButton.siblings());
+         
          
          
 
@@ -46,14 +50,19 @@ $(document).ready(function(){
              url : url,
              success : function(data){
            //will reset the form. i need to used either django message framework or bootstrap alert here later
+                console.log(data.thump_up_count);
                 if (data.thumped_up) {
-                  $clickButtonSibilings.text(data.thump_up_count);
-                  $clickButtonSign.text('thumped');
+                  $clickThumpUpButtonSiblings.text(data.thump_up_count);
+                  $clickThumpUpButtonSign.text('thumped');
+                  $clickThumpDownButtonSiblings.text(data.thump_down_count);
+                  $clickThumpDownButtonSign.text('unthumped');
                   
                 }
                 else {
-                  $clickButtonSibilings.text(data.thump_up_count);
-                  $clickButtonSign.text('unthumped');
+                  $clickThumpUpButtonSiblings.text(data.thump_up_count);
+                  $clickThumpUpButtonSign.text('unthumped');
+                  $clickThumpDownButtonSiblings.text(data.thump_down_count);
+                  $clickThumpDownButtonSign.text('thumped');
                   
                 }
 
@@ -71,11 +80,14 @@ $(document).ready(function(){
   $('.thump_down_js').click(function(e){
    // prevent from normal form behaviour
          e.preventDefault();
-       // serialize the form dat
+       // serialize the form 
+       
          var url = $(this).attr('thump_down_url');
          var $clickCommentButton = $(this);
-         var $clickButtonSign = $clickCommentButton.find('.thumped_down_sign');
-         var $clickButtonSibilings = $clickCommentButton.siblings('.thump_down_count');
+         var $clickThumpDownButtonSign = $clickCommentButton.find('.thumped_down_sign');
+         var $clickThumpDownButtonSiblings = $clickCommentButton.siblings('.thump_down_count');
+         var $clickThumpUpButtonSiblings = $clickCommentButton.siblings('.thump_up_count');
+         var $clickThumpUpButtonSign = $clickCommentButton.find('.thumped_up_sign');
          
          
 
@@ -83,16 +95,21 @@ $(document).ready(function(){
          $.ajax({
              type : 'get',
              url : url,
-             success : function(data){
+             success : function(data2){
            //will reset the form. i need to used either django message framework or bootstrap alert here later
-                if (data.thumped_down) {
-                  $clickButtonSibilings.text(data.thump_down_count);
-                  $clickButtonSign.text('thumped_down');
+                console.log(data2.thump_down_count);
+                if (data2.thumped_down) {
+                  $clickThumpDownButtonSiblings.text(data2.thump_down_count);
+                  $clickThumpDownButtonSign.text('thumped_down');
+                  $clickThumpUpButtonSiblings.text(data2.thump_up_count);
+                  $clickThumpUpButtonSign.text('unthumped');
                   
                 }
                 else {
-                  $clickButtonSibilings.text(data.thump_down_count);
-                  $clickButtonSign.text('unthumped_down');
+                  $clickThumpDownButtonSiblings.text(data2.thump_down_count);
+                  $clickThumpDownButtonSign.text('thumped_down');
+                  $clickThumpUpButtonSiblings.text(data2.thump_up_count);
+                  $clickThumpUpButtonSign.text('unthumped');
                   
                 }
 
@@ -102,4 +119,15 @@ $(document).ready(function(){
              }
          });
   });
+});
+
+$(document).ready(function(){
+  setTimeout(function(){
+    $('.message').fadeOut('slow');
+  }, 10000);
+
+  $('.del_msg').on('click', function(){
+    $('.del_msg').parent().attr('style', 'display:none;');
+  })
+
 });

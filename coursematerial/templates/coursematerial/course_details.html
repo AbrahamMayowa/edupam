@@ -1,0 +1,52 @@
+{% extends "coursematerial/section.html" %}
+
+{% block title %}Course File{% endblock %}
+
+<div>
+{% block content %}
+{{ file_data.course_title }}
+{{file_data.course_code }}
+{{question_file.school_name}}
+
+
+</div>
+<div>
+ 
+    {% for course_file in file_data.file_info.all %}
+        {% if course_file.file_info %}  
+                <a href="{% url 'download_file' path=course_file.course_file.name pk=file_data.pk %}">Download file</a>
+        {% else %}
+            No file
+        {% endif %}
+    {% endfor %}
+       
+</div>
+
+<div>
+        {% for review_entry in review_list %}
+        <div>
+            {{review_entry.review}}
+            {{review_entry.upload_time}}
+        {% if request.user == review_entry.review_author %}
+            <a href="{% url 'edit_file_review' question_id=file_data.pk review_id=review_entry.pk %}">Edit</a>
+        {% endif %}
+        </div>
+       
+
+        {% empty %}
+        No review! Create one in the form below!
+
+        {% endfor %}
+
+</div>
+
+
+    <form action="{% url 'file_review' file_data.pk %}" method="post">
+        {% csrf_token %}
+        {{ review_form }}
+        <input type="submit" value="Submit">
+    </form>
+
+
+
+{% endblock %}

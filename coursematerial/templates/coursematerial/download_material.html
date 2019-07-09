@@ -1,8 +1,46 @@
-{% extends "coursematerial/section.html %}
+{% extends "coursematerial/section.html" %}
 
 {% block content %}
 The course title:
-{{ material_list.course_title ))
+{{ material_list.course_title }}
 The course code:
-(( material_list.course_code}}
+{{ material_list.course_code}}
+{{material_list.time_of_download}}
+
+<div>
+
+    <div>
+            {% for data in material_list.course_material_file.all %}
+                    <a href="{% url 'material_file' path=data.course_file.name pk=material_list.pk %}">Download</a>
+          
+            {% empty %}
+            <div>
+                No file to download
+            </div>
+            {% endfor %}
+
+    </div>
+<form method="POST" action="{% url 'material_review' material_list.pk %}">
+    {% csrf_token %}
+    {{ form }}
+    <button type="submit" value="submit">submit</button>
+</form>
+</div>
+
+<div>
+
+    {% for review in review_list %}
+        {{review.review}}
+        {% if request.user == review.review_author %}
+            <a href="{% url 'material_review_edit' material_id=material_list.pk review_id=review.pk %}">Edit</a>
+        {% endif %}
+
+    {% empty %}
+    No review 
+
+    {% endfor %}
+
+</div>
+
+
 {% endblock %}

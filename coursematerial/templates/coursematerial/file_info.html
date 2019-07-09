@@ -1,0 +1,21 @@
+{% extends "coursematerial/section.html" %}
+
+{% block title %}file Info{% endblock %}
+
+{% block content %}
+
+<form method="POST">
+    {% csrf_token %}
+    {{ form }}
+    <button type="submit" value="submit">Submit</button>
+</form>
+
+<div>
+    <p>
+        <b>Note</b>
+        fill required information about the course. On submit the form, you will be redirect to a page to upload
+        image(s) or file(pdf, txt etc) relating to the information.
+    </p>
+</div>
+
+{% endblock %}

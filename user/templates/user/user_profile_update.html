@@ -1,0 +1,12 @@
+{% extends "coursematerial/section.html" %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+<form method="post">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Submit">
+</form>
+
+{% endblock %}

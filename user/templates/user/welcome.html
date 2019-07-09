@@ -1,0 +1,17 @@
+{% extends 'coursematerial/section.html' %}
+
+{% block title %} Welcome {% endblock %}
+
+{% block content %}
+
+<div>
+    Hi <a href="{% url 'user_info' new_user.pk %}">{{new_user.first_name}} {{new_user.last_name}}</a>
+
+    <p>
+        You are welcome to Edupam!
+    </p>
+
+
+</div>
+
+{% endblock %}

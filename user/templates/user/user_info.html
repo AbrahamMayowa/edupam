@@ -1,0 +1,76 @@
+{% extends 'coursematerial/section.html' %}
+{% load static %}
+
+
+{% block title %}Profile{% endblock %}
+
+
+{% block content %}
+
+<div> 
+    <img src="{{user_info.header_img_url}}" alt="header picture">
+        {% if user.is_authenticated %}
+            {% if request.user == user_info %}
+            <form action="{% url 'profile_header' user_info.pk %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ header_form }}
+                <input type="submit" value="Create">
+            </form>
+    <div>   
+        <button id="upload_header_picture">header</button>
+    </div>
+            {% endif %}
+        {% endif %}
+</div>
+
+<div>
+   <img src="{{user_info.profile_img_url}}" alt="profile picture">
+        {% if user.is_authenticated %}
+            {% if request.user == user_info %}
+            <form action="{% url 'profile_picture' user_info.pk %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form }}
+                <input type="submit" value="Create">
+            </form>
+            <div>   
+                <button id="upload_profile_picture">picture</button>
+            </div>
+            {% endif %}
+        {% endif %}
+
+</div>
+
+
+
+
+<div>
+    {{user_info.user_name}}
+    <div>
+    {% if user.is_authenticated %}
+            {% if request.user in user_info.user_followers.all %}
+                <a href="{% url 'user_follow' user_info.pk %}">
+                    <button id="follow_user" data_url="{% url 'user_follow' user_info.pk %}"><span id="follow_status">Following</span></button></a>
+            {% else %}
+            <a href="{% url 'user_follow' user_info.pk %}">
+                <button id="follow_user"><span id="follow_status">Follow</span></button></a>
+        {%endif %}
+        {%endif%}
+    </div>
+
+    <div id="follower_count">{{user_info.follower.count}}</div>
+    {% if user.is_authenticated %}
+    {% if request.user == user_info %}
+        
+            <a href="{% url 'profile_edit' user_info.pk %}">Edit Profile</a>
+            {% endif %}
+            {%endif%}
+        
+</div>
+
+
+
+{% endblock %}
+
+{% block javascript %}
+<script src="{% static 'follow/user_follow.js' %}"></script>
+{% endblock %}

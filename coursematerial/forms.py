@@ -1,26 +1,40 @@
 from django.forms import ModelForm
-from .models import CourseMaterial, PastQuestion
+from .models import FileUpload, FileReview, CourseFile
+from haystack.forms import SearchForm
 from django import forms
 
+"""
+class MaterialForm(ModelForm):
 
-class FormForMaterial(ModelForm):
     class Meta:
         model = CourseMaterial
-        fields = ['file', 'course_code', 'course_title', 'material_title', 'shared_by']
+        fields = ['course_code', 'course_title', 'material_title', 'school', 'department', ]
+"""
 
 
-class FormForQuestion(ModelForm):
+class FileForm(ModelForm):
+
     class Meta:
-        model = PastQuestion
-        fields = ['image', 'file', 'course_code', 'course_title', 'school']
-        widgets = {"image": forms.ClearableFileInput(attrs={'id': 'image', 'multiple': True})}
+        model = FileUpload
+        fields = ['course_code', 'course_title', 'school_name', 'department', 'file_type' ]
 
    
 
-class FormForReviewing(ModelForm):
+class FileReviewForm(ModelForm):
+
     class Meta:
-        model = PastQuestion
+        model = FileReview
         fields = ['review']
+
+#past question file upload
+class FileUploadForm(ModelForm):
+
+    class Meta:
+        model = CourseFile
+        fields = ['course_file']
+
+
+
 
 
 

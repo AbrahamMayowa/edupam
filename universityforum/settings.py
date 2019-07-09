@@ -7,7 +7,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 # Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
+# See https://docs.djangopr oject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 
@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     # Installed app
+    'follow.apps.FollowConfig',
     'forum.apps.ForumConfig',
     'user.apps.UserConfig',
     'voting.apps.VotingConfig',
@@ -45,7 +46,8 @@ INSTALLED_APPS = [
     # Third Party
     'ckeditor',
     'ckeditor_uploader',
-    'crispy_forms',
+    'haystack',
+    'whoosh'
 
 ]
 
@@ -84,6 +86,16 @@ TEMPLATES = [
         },
     },
 ]
+
+
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
+        'PATH': os.path.join(os.path.dirname(__file__), 'whoosh_index'),
+    },
+}
+
+HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
 
 WSGI_APPLICATION = 'universityforum.wsgi.application'
 

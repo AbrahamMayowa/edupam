@@ -1,5 +1,4 @@
 from django.db import models
-from django.contrib.auth import get_user_model
 from django.utils.text import slugify
 from ckeditor_uploader.fields import RichTextUploadingField
 from django.utils import timezone
@@ -35,7 +34,7 @@ class Comment(models.Model):
     thump_up = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True,related_name='user_upvote_comment')
     thump_down = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True, related_name='user_downvote_comment')
     comment_date = models.DateField(auto_now_add=True)
-    comment_author = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='commment_creator')
+    comment_author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='commment_creator')
     
 
 
