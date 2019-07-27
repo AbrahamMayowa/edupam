@@ -21,6 +21,8 @@ urlpatterns = [
     path('vote/', include('voting.urls')),
     path('search/', include('haystack.urls'), name='haystack_search'),
     path('follow/', include('follow.urls')),
+    path('notifications/', include('notifications.urls')),
+    path('activity/', include('activity.urls')),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

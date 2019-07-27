@@ -1,0 +1,23 @@
+{% extends 'coursematerial/section.html' %}
+
+{% block title %} Activity {% endblock %}
+
+{% block content %}
+
+{% for notif in get_user_notifications %}
+
+    You {{notif.action_verb}}
+    {% if notif.is_comment_thump %}
+    on <a href="{{notif.content_object.journalism.get_absolute_url}}">{{notif.content_object.journalism}}</a>
+    {% else %}
+    <a href="{{notif.content_object.get_absolute_url}}">{{notif.content_object}}</a>
+    {% endif %}
+    {{notif.created|timesince}} ago
+
+    
+
+    {% empty %}
+    You have no activity
+{% endfor %}
+
+{% endblock %}

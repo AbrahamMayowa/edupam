@@ -69,6 +69,9 @@
 {% if user.is_authenticated %}
     Welcome <a href="{% url 'user_info' user.pk %}">{{user.username }}</a>
 
+    user activity <a href="{% url 'activity' user.pk %}">Here</a>
+    Notification <a href="{% url 'user_notification' user.pk %}">here</a>
+
     <h3><a href="{% url 'post_form' %}">Create a forum post here</a></h3>
 
     <div>

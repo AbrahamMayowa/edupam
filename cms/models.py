@@ -15,10 +15,17 @@ class Journalism(models.Model):
     number_of_views = models.IntegerField(default=0)
     claps = models.IntegerField(default=0)
     ranking_determination = models.IntegerField(default=0)
+    hidden_status = models.BooleanField(default=False)
 
 
     def __str__(self):
         return self.title
+
+    def get_absolute_url(self):
+        return reverse('content_details', kwargs={'slug':self.slug, 'pk':self.id})
+    
+    def class_name(self):
+        return self.__class__.__name__
 
 
 
@@ -30,11 +37,23 @@ class Journalism(models.Model):
 
 class Comment(models.Model):
     comment_body = models.CharField(max_length=1000, blank=False, null=False)
+
     journalism = models.ForeignKey(Journalism, on_delete=models.CASCADE, related_name='journalisms')
-    thump_up = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True,related_name='user_upvote_comment')
-    thump_down = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True, related_name='user_downvote_comment')
+
+    thump_up = models.ManyToManyField(settings.AUTH_USER_MODEL, \
+        blank=True,related_name='user_upvote_comment')
+
+    thump_down = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True, \
+        related_name='user_downvote_comment')
+
     comment_date = models.DateField(auto_now_add=True)
-    comment_author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='commment_creator')
+
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, \
+        related_name='commment_creator')
+
+    
+    def class_name(self):
+        return self.__class__.__name__
     
 
 

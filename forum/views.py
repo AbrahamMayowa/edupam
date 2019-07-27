@@ -16,7 +16,7 @@ from .models import Post, Picture
 
 
 # view for uploading of new post. It has formset for uploading multiple images of the post
-@login_required(login_url='/user/login/')
+@login_required
 def post_form_view(request):
     ImageFormSet = modelformset_factory(Picture, fields=('image',), extra=3)
     if request.method == "POST":

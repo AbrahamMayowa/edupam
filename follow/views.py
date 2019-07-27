@@ -5,6 +5,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import Follower
 from forum.models import Post
 from django.contrib.auth.decorators import login_required
+from notifications.utils import general_notification
 
 
 #to follow a user
@@ -15,10 +16,16 @@ def	user_follow(request, pk):
 	data = {}
 	if user not in get_user.user_followers.all():
 		Follower.objects.get_or_create(the_followed=get_user, the_follower=user)
+		general_notification(user, get_user, 'following', get_user)
+
 		data['follower_add'] = True
 	else:
 		Follower.objects.filter(the_followed=get_user, the_follower=user).delete()
 		data['follower_add'] = False
 	return JsonResponse(data)
+
+
+		
+
 
 	

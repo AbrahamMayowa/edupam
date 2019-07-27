@@ -14,6 +14,8 @@ from collections import defaultdict
 
 from .forms import ContentForm, CommentForm
 from .models import Journalism, Comment
+from activity.utils import save_activity
+from notifications.utils import general_notification, comment_notification, thumped_notification
 
 
 # content form
@@ -26,6 +28,8 @@ def content_view(request):
             content_data.author = request.user
             content_data.published_date = timezone.now()
             content_data.save()
+            # abtraction of content creating activity
+            save_activity(content_data.author, content_data, 'created', False)
 
             return redirect('content_details', pk=content_data.pk, slug=content_data.slug)
     else:
@@ -34,7 +38,7 @@ def content_view(request):
 
 
 # Editing content
-@login_required(login_url='/user/login/')
+@login_required
 def edit_content(request, pk, slug):
     edit_form = get_object_or_404(Journalism, pk=pk, slug=slug)
     if request.user != edit_form.author:
@@ -73,11 +77,6 @@ def redirect_delete(request, pk):
     return render(request, 'cms/confirm_delete.html', context)
 
 
-
-
-
-
-
 # content details view
 def content_details(request, pk, slug):
     form = CommentForm()
@@ -108,12 +107,6 @@ def content_creator_profile(request, pk):
 #quary object for the main page and dynamic calculation of list ranking(ranking_determination)
 def main_page(request):
     journalism_object = Journalism.objects.all()   
-    for single_object in journalism_object:
-        clap_value = 60/100 * single_object.claps
-        view_value = 40/100 * single_object.number_of_views
-        total_sum = round(clap_value + view_value)
-        single_object.ranking_determination = int(total_sum)
-        single_object.save()
     all_content = journalism_object.order_by('-draft_date')[:3]
     determing_query = journalism_object.order_by('-ranking_determination')
     ranking = determing_query.difference(all_content)
@@ -123,7 +116,7 @@ def main_page(request):
 
 
 
-
+# creating comment
 @login_required
 def comment_view(request, pk):
     journalism_pk = get_object_or_404(Journalism, pk=pk)
@@ -133,8 +126,12 @@ def comment_view(request, pk):
             form_data = form.save(commit=False)
             form_data.journalism = journalism_pk
             form_data.comment_date = timezone.now()
-            form_data.comment_author = request.user
+            form_data.author = request.user
             form_data.save()
+            # abtracting comment activity
+            save_activity(form_data.author, journalism_pk, 'commented on', False)
+            comment_notification(form_data.author, journalism_pk, journalism_pk.author)
+
             return redirect('content_details', pk=journalism_pk.id, slug=journalism_pk.slug)     
     else:
         form = CommentForm()
@@ -154,7 +151,7 @@ def edit_comment(request, comment_id, journalist_id):
                 form_data = comment_form_instance.save(commit=False)
                 form_data.content = journalist_data
                 form_data.comment_date = timezone.now()
-                form_data.comment_author = request.user
+                form_data.author = request.user
                 form_data.save()
                 return redirect('content_details', pk=journalist_data.pk, slug=journalist_data.slug)
         else:
@@ -172,7 +169,7 @@ def edit_comment(request, comment_id, journalist_id):
 def delete_comment(request, comment_pk, journalist_id):
     journalism = get_object_or_404(Journalism, pk=journalist_id)
     deleted_comment = get_object_or_404(Comment, pk=comment_pk)
-    if request.user == deleted_comment.comment_author or request.user == journalism.author:
+    if request.user == deleted_comment.author or request.user == journalism.author:
         deleted_comment.delete()
         messages.success(request, 'Your comment deleted!')
     else:
@@ -214,6 +211,8 @@ def comment_thump_up(request, pk):
         comment.thump_down.remove(user)
     if user not in comment.thump_up.all():
         comment.thump_up.add(user)
+        save_activity(request.user, comment, 'Thumped Up', True)
+        thumped_notification(comment, comment.author, request.user, 'Thumped Up', True)
         data['thumped_up'] = True
    
     else:
@@ -243,20 +242,4 @@ def comment_thump_down(request, pk):
     data2['thump_down_count'] = numb_of_thump_down.thump_down.count()
     data2['thump_up_count'] = numb_of_thump_down.thump_up.count()
     return JsonResponse(data2)
-
-
-
-        
-
-
-
-
-
-    
-
-
-
-
-
-
 

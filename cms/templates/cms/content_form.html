@@ -1,5 +1,4 @@
 {% load static from staticfiles %}
-{% load crispy_forms_tags %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -36,7 +35,7 @@
     <form method="post" action=" " enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.media }}
-        {{ form | crispy }}
+        {{ form }}
         <input type="submit" value="Submit Draft">
     </form>
 </div>

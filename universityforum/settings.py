@@ -32,6 +32,8 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     # Installed app
+    'activity.apps.ActivityConfig',
+    'notifications.apps.NotificationsConfig',
     'follow.apps.FollowConfig',
     'forum.apps.ForumConfig',
     'user.apps.UserConfig',

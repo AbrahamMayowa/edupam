@@ -2,7 +2,7 @@ from django.forms import ModelForm
 from django import forms
 
 
-from .models import Comment, Post, Picture
+from .models import Comment, Post, Picture, CommentPicture
 
 
 class PostForm(ModelForm):
@@ -15,7 +15,12 @@ class PostForm(ModelForm):
 class CommentForm(ModelForm):
     class Meta:
         model = Comment
-        fields = ['text', 'picture']
+        fields = ['text']
+
+class CommentPictureForm(ModelForm):
+    class Meta:
+        model = CommentPicture
+        fields = ['picture']
 
 
 class PictureForm(ModelForm):

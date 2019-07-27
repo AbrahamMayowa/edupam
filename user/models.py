@@ -2,6 +2,7 @@ from django.contrib.auth.models import AbstractUser
 from django.conf import settings
 from django.db import models
 from follow.models import Follower
+from django.urls import reverse
 
 
 class UserInfo(AbstractUser):
@@ -12,6 +13,10 @@ class UserInfo(AbstractUser):
     profile_picture = models.ImageField(blank=True, null=True, upload_to='profile_picture')
     time_joined = models.DateTimeField(auto_now_add=True)
     user_follower = models.ManyToManyField('self', through=Follower, symmetrical=False, related_name='user_followers')
+
+
+    def get_absolute_url(self):
+        return reverse('user_info', args=[str(self.id)])
 
 
     # for image rendering

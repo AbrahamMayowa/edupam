@@ -1,0 +1,42 @@
+{% extends 'coursematerial/section.html' %}
+
+{% block title %} Notifications {% endblock %} 
+
+{% block content %}
+{% for notification in all_query %}
+    {% if notification.class_name == 'GeneralNotification' %}
+    <a href="{{notification.performer.get_absolute_url}}">{{notification.perfomer}}</a> {{notification.action_verb_general}} you 
+    {{notification.created_general|timesince}} ago
+
+    {% elif notification.class_name == 'CommentNotification' %}
+        {% for each_user in notification.comment_performer_list.all %}
+            <a href="{{each_user.get_absolute_url}}">{{each_user}}</a>
+        {% endfor %}
+        {{notification.comment_action_verb}} on <a href="{{notification.content_obj.get_absolute_url}}">{{notification.content_obj}}</a> {{notification.created|timesince}} ago
+
+    {% elif notification.class_name == 'PersonalisedCommentNotif' %}
+        {% for actor in notification.related_comment_notification.comment_performer_list.all %}
+            <a href="{{actor.get_absolute_url}}">{{actor}}</a>
+        {% endfor %}
+        also {{notification.personal_action_verb}} on 
+        <a href="{{notification.related_comment_notification.content_obj.get_absolute_url}}">
+            {{notification.related_comment_notification.content_obj}}</a>
+
+        {% elif notification.class_name == 'ThumpedNotification' %}
+        {% for user_actor in notification.actor_list.all %}
+            <a href="{{user_actor.get_absolute_url}}">{{user_actor}}</a>
+        {% endfor %}
+        {{notification.thumped_action_string}}
+        {% if notification.is_comment_thump %}
+            your comment
+        {% else %}
+            <a href="{{notification.content_obj.get_absolute_url}}">{{notification.content_obj}}</a>
+        {% endif %} 
+        {{notification.created|timesince}} ago
+    {% endif %}
+
+    {% empty %}
+    No notification!
+{% endfor %}
+
+{% endblock %}
