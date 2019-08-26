@@ -10,7 +10,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangopr oject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 
+SECRET_KEY = 'q1d=@ddjb1bej&tu0xn!$*g#&a=#p5!jh5(v(%d-5awak+sbk-'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'follow.apps.FollowConfig',
     'forum.apps.ForumConfig',
     'user.apps.UserConfig',
+    'general_search.apps.GeneralSearchConfig',
     'voting.apps.VotingConfig',
     'coursematerial.apps.CoursematerialConfig',
     'django.contrib.admin',
@@ -52,9 +53,6 @@ INSTALLED_APPS = [
     'whoosh'
 
 ]
-
-
-CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 CKEDITOR_UPLOAD_PATH = "uploads/"
 

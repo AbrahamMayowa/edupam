@@ -1,21 +1,33 @@
 from django.db import models
 from django.utils.text import slugify
-from ckeditor_uploader.fields import RichTextUploadingField
+from ckeditor.fields import RichTextField
 from django.utils import timezone
 from django.urls import reverse
 from django.conf import settings
+from django.db.models import Q
+
+
+class JournalismManager(models.Manager):
+    #to abstract general search queryset in the general_search app
+    def search(self, query):
+        qs = self.get_queryset()
+        if query is not None:
+            q_look = (Q(title__icontains=query)|
+            Q(author__icontains=query))
+            unique_qs = qs.filter(q_look).distinct()
+        return unique_qs
 
 class Journalism(models.Model):
-
     title = models.CharField(max_length=150)
-    content = RichTextUploadingField()
+    content = RichTextField()
     slug = models.SlugField(max_length=150, unique=False)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    draft_date = models.DateTimeField(auto_now_add=True)
+    created = models.DateTimeField(auto_now_add=True)
     number_of_views = models.IntegerField(default=0)
     claps = models.IntegerField(default=0)
     ranking_determination = models.IntegerField(default=0)
     hidden_status = models.BooleanField(default=False)
+    objects = JournalismManager()
 
 
     def __str__(self):
@@ -36,7 +48,7 @@ class Journalism(models.Model):
 
 
 class Comment(models.Model):
-    comment_body = models.CharField(max_length=1000, blank=False, null=False)
+    comment_body = models.TextField(max_length=1000, blank=False, null=False)
 
     journalism = models.ForeignKey(Journalism, on_delete=models.CASCADE, related_name='journalisms')
 
@@ -55,22 +67,3 @@ class Comment(models.Model):
     def class_name(self):
         return self.__class__.__name__
     
-
-
-
-
-
-
-
-
-
-
-    
-
-
-        
-    
-        
-
-
-# Create your models here.

@@ -15,8 +15,7 @@ def update_view_status(request, user_id):
     general = GeneralNotification.objects.filter(performer=user)
     personal_comment = PersonalisedCommentNotif.objects.filter(notification_owner=user)
     thumped_notif = ThumpedNotification.objects.filter(thumped_content_type_author=user)
-    all_query = sorted(chain(comments, general, personal_comment, thumped_notif), key=attrgetter('created'))
-    all_query.reverse()
+    all_query = sorted(chain(comments, general, personal_comment, thumped_notif), key=attrgetter('created'), reverse=True)
 
     # update view status to true when user has made request or view it
     for entry in all_query:
@@ -24,7 +23,5 @@ def update_view_status(request, user_id):
         entry.save()
     context = {'all_query': all_query}
     return render(request, 'notifications/user_notifications.html', context)
-
-
 
 # Create your views here.

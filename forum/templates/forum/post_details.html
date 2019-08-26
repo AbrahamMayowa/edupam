@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -53,22 +54,74 @@
 
 <div id="content">
     {% block content %}
-    <hi> {{ post_list.title }} </hi>
+    <hi> {{ post_details.title }} </hi>
 
-    {{ post_list.body }}
+    {{ post_details.body | safe }}
 <div>
-    {{ post_list.author }}
+    {{ post_details.author }}
 </div>
 
 <div>
-    {% for photo_image in post_list.picture_set.all %}
-        <img src="{{ photo_image.image.url }}">
+    {% if post_details.post_pictures %}
+        {% for photo_image in post_details.post_picture.all %}
+            <img src="{{ photo_image.image.url }}">
+        {% endfor %}
+    {% endif %}
+</div>
+
+<div>
+    thump up count<span id="thump_up_count">{{post_details.post_thumped_up.count}}</span>
+    thump down count<span id='thump_down_count'>{{post_details.post_thumped_down.count}}</span>
+    <button type="submit" class='thump_up_post' post_thump_up_url="{% url 'post_thumped_up' post_details.pk %}">thump up</button>
+    <button class='thump_down_post' thump_down_url="{% url 'post_thumped_down' post_details.pk %}">thump down</button>
+    <button id='report_post'>Report</button>
+    <button id='follow' followUrl="{% url 'follow_post' post_details.pk %}">Follow Thread</button>
+
+    <a href="{% url 'edit_post' post_details.pk %}">edit thread</a>
+</div>
+
+
+
+<div>
+    <form action="{% url 'post_comment_view' post_details.pk %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ formset.management_form }}
+        {{form}}
+        {% for form in formset %}
+            {{ form }}
+        {% endfor %}
+        <input type="submit" value="Comment">
+    
+    </form>
+</div>
+<div>
+    {% for comment in post_details.posts.all %}
+        <div>
+            {{comment.text}}
+            thump up number {{comment.comment_thumped_up.count}}
+            <a href="{% url 'comment_thump_up' comment_id=comment.pk post_id=post_details.pk %}">thump up here</a>
+            thump down number {{comment.comment_thumped_down.count}}
+            <a href="{% url 'comment_thump_down' comment_id=comment.pk post_id=post_details.pk %}">down</a>
+
+            <p>
+                <a href="{% url 'comment_details' comment.pk %}">Reply comment</a>
+                <a href="{% url 'post_comment_edit' post_id=post_details.pk comment_id=comment.pk %}">Edit comment</a>
+            </p>
+
+
+        </div>
+
     {% endfor %}
-
 </div>
+
 
     {% endblock %}
-</div>
+    <script src="{% static 'jquery/jquery-3.4.0.js' %}"></script>
+    <script src="{% static 'jquery/bootstrap.min.js' %}"></script>
+    <script src="{% static 'forum/postDetails.js' %}"></script>
+    <script src="{% static 'forum/commentReply.js' %}"></script>
+    <script src="{% static 'forum/commentThump.js' %}"></script>
+
+
 </body>
 </html>
-

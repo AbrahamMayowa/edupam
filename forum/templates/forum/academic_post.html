@@ -12,15 +12,21 @@
         {% if academic_posts.has_previous %}
             <a href="?page=1">&laquo; first</a>
             <a href="?page={{ academic_posts.previous_page_number }}">previous</a>
-        {% endif %}
-<span>
-Page {{ academic_posts.number }} of {{ academic_posts.paginator.num_pages }}.
-</span>
+            {% endif %}
+            Page {{ academic_posts.number }} of {{ academic_posts.paginator.num_pages }}.
+
+
         {% if academic_posts.has_next %}
             <a href="?page={{ academic_posts.next_page_number }}">next</a>
             <a href="?page={{ academic_posts.paginator.num_pages }}">last &raquo;</a>
         {% endif %}
 </span>
+
+   
+
+   <span>
+    
+    </span>
 </div>
 
 

@@ -1,11 +1,12 @@
 {% extends 'coursematerial/base.html' %}
+{% load socialaccount %}
 {% block title %}Log In{% endblock %}
 {% block content %}
-{% load socialaccount %}
+
 <h2>Log In</h2>
 
 Log in through Facebook
-<a href="{% provider_login_url "facebook" method="oauth2" %}">Facebook Login</a>
+<a href="{% provider_login_url "facebook" method="oauth2" %}">Facebook OAuth2</a>
 
 <p>
     <h2>

@@ -1,0 +1,41 @@
+{% extends 'coursematerial/section.html' %}
+{% block title %} Create Post {% endblock %}
+
+{% block content %}
+<div>
+    <form action="{% url 'general_search' %}" method="get">
+        {% csrf_token %}
+            {{ search_form }}
+        <input type="submit" value="Submit">
+    
+    </form>
+</div>
+<div>
+    {% for post in posts %}
+        <a href="{{post.get_absolute_url}}">{{post.title}}</a>
+
+    {% empty %}
+    No Thread
+    {% endfor %}
+
+</div>
+
+
+
+
+ 
+<div>
+<form action="{% url 'post_form' %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ formset.management_form }}
+    {{ form.media}}
+    {{form}}
+    {% for form in formset %}
+        {{ form }}
+    {% endfor %}
+    <input type="submit" value="Create Thread">
+
+</form>
+</div>
+
+{% endblock %}

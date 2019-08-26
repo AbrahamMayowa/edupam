@@ -1,0 +1,27 @@
+{% extends 'coursematerial/section.html' %}
+
+{% block title %} Social Life {% endblock %}
+
+{% block content %}
+{% for post in social_life %}
+    {{ post.title }}
+    {{ post.author }}
+{% endfor %}
+
+<div>
+        {% if social_life.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ social_life.previous_page_number }}">previous</a>
+        {% endif %}
+<span>
+Page {{ social_life.number }} of {{ social_life.paginator.num_pages }}.
+</span>
+        {% if social_life.has_next %}
+            <a href="?page={{ social_life.next_page_number }}">next</a>
+            <a href="?page={{ social_life.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+</span>
+</div>
+
+
+{% endblock %}

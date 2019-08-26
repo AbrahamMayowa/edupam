@@ -26,7 +26,6 @@ def content_view(request):
         if form.is_valid():
             content_data = form.save(commit=False)
             content_data.author = request.user
-            content_data.published_date = timezone.now()
             content_data.save()
             # abtraction of content creating activity
             save_activity(content_data.author, content_data, 'created', False)
@@ -48,7 +47,6 @@ def edit_content(request, pk, slug):
         if form.is_valid():
             new_data = form.save(commit=False)
             new_data.author = request.user
-            new_data.published_data = timezone.now()
             new_data.save()
             return redirect('content_details', pk=new_data.pk, slug=new_data.slug)
     else:

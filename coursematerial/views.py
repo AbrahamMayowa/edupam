@@ -23,7 +23,6 @@ def file_info(request):
         form = FileForm(request.POST)
         if form.is_valid():
             info = form.save(commit=False)
-            info.upload_time = timezone.now()
             info.uploader = request.user
             info.save()
             return redirect('file_upload_view', info.pk)

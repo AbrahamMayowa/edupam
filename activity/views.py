@@ -11,8 +11,7 @@ def user_activities(request, user_id):
     user = request.user
     if get_user != user:
         raise PermissionDenied('You are Forbidden!')
-    else:
-        get_user_notifications = Activities.objects.filter(performer=user).order_by('-created')
+    get_user_notifications = Activities.objects.filter(performer=user).order_by('-created')
     context = {'get_user_notifications': get_user_notifications}
     return render(request, 'activity/user_activity.html', context)
 

@@ -1,0 +1,62 @@
+{% extends 'coursematerial/section.html' %}
+
+{% block title %}Comment{% endblock %}
+
+{% block content %}
+
+
+<div>
+    back to the thread <a href="{{comment.post.get_absolute_url}}">{{comment.post.title}}</a>
+    {{comment.author}}
+
+    {{comment.text}}
+
+</div>
+<div>
+        thump up number<span id='comment_thump_up_count'>{{comment.comment_thumped_up.count}}</span>
+        <button class="comment_thump_up" comment_up_url="{% url 'comment_up_main'  comment.id %}">
+            Thump Up comment
+        </button>
+        thump down number <span id='comment_thump_down_count'>
+            {{comment.comment_thumped_down.count}}</span>
+        <button id='comment_thump_down' comment_down_url="{% url 'comment_down_main' comment.id %}">
+            Thump down comment
+        </button>
+
+        <p>
+            <a href="{% url 'post_comment_edit' post_id=comment.post.id comment_id=comment.id %}">Edit comment</a>
+        </p>
+
+    </div>
+
+<div>
+    {% for reply in comment.comments.all %}
+        <div>
+            {{reply.body}}
+            reply thump up number <span id="reply_thump_up_count">{{reply.reply_thumped_up.count}}</span>
+            <a href="{% url 'reply_thump_up' reply.pk %}">bug up</a>
+            <button id="reply_thump_up" reply_up_url="{% url 'reply_thump_up' reply.pk %}">
+                Thump up reply
+            </button>
+            reply thump down number <span id='reply_thump_down_count'>
+                {{reply.reply_thumped_down.count}}</span>
+            <a href="{% url 'reply_thump_down' reply.pk %}">bug down</a>
+            <button id="reply_thump_down" reply_down_url="{% url 'reply_thump_down' reply.pk %}">
+                Thump down reply
+            </button>
+            <p>
+                <a href="{% url 'comment_reply_edit' reply_id=reply.id comment_id=comment.id %}">Edit reply</a>
+            </p>
+        </div>
+    {% endfor %}
+</div>
+<div>
+<form action="{% url 'comment_reply' comment.pk %}" method="post">
+    {% csrf_token %}
+    {{form}}
+    <input type="submit" value="Reply">
+
+</form>
+</div>
+
+{% endblock %}

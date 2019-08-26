@@ -1,0 +1,23 @@
+{% extends 'coursematerial/section.html' %}
+
+{% block title %}Search{% endblock %}
+
+{% block content %}
+
+<form method="get">
+    {% csrf_token %}
+        {{ form }}
+    <input type="submit" value="Submit">
+
+</form>
+
+{% if queryset %}
+    {% for result in queryset %}
+      {{result.title}}
+    {% endfor %}
+
+{% else %}
+    No result
+{% endif %}
+
+{% endblock %}

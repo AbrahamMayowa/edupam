@@ -1,0 +1,20 @@
+{% extends 'coursematerial/section.html' %}
+
+{% block title %}Edit Thread {% endblock %}
+
+{% block content %}
+
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ formset.management_form }}
+    {{ form.media}}
+    {{form}}
+    {% for form in formset %}
+        {{ form }}
+    {% endfor %}
+    <input type="submit" value="Create Thread">
+
+</form>
+
+{% endblock %}

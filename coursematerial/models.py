@@ -1,9 +1,22 @@
 from django.db import models
 from django.conf import settings
 from django.utils import timezone
+from django.db.models import Q
+from django.urls import reverse
 
-
-
+class FileUploadManager(models.Manager):
+    #abtracting file upload model search for general-search app
+    def search(self, query=None):
+        qs = self.get_queryset()
+        if query is not None:
+            qs_look = (
+                Q(course_code__icontains=query)|
+                Q(course_title__icontains=query)|
+                Q(school_name__icontains=query)|
+                Q(department__icontains=query)
+            )
+            unique_qs = qs.filter(qs_look).distinct()
+        return unique_qs
 
 
 class FileUpload(models.Model):
@@ -17,10 +30,16 @@ class FileUpload(models.Model):
     school_name = models.CharField(max_length=100, null=False, blank=False)
     department = models.CharField(max_length=100, null=False, blank=False)
     time_of_download = models.IntegerField(default=0)
-    upload_time = models.DateField(auto_now_add=True)
+    created = models.DateField(auto_now_add=True)
     uploader = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     file_type = models.CharField(max_length=50, choices=UPLOAD_TYPE, null=False, blank=False)
+    objects = FileUploadManager()
 
+    def class_name(self):
+        return self.__class__.__name__
+
+    def get_absolute_url(self):
+        return reverse('file_detail', kwargs={'pk':pk})
 
 
 class CourseFile(models.Model):

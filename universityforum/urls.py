@@ -23,6 +23,7 @@ urlpatterns = [
     path('follow/', include('follow.urls')),
     path('notifications/', include('notifications.urls')),
     path('activity/', include('activity.urls')),
+    path('general/search/', include('general_search.urls')),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

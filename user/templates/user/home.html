@@ -49,7 +49,7 @@
     {% block sub_header %}
       <ul>
         <li><a href="{% url 'academic_post' %}">Academic</a></li>
-        <li><a href="{% url 'knowledge_post' %}">knowledge</a></li>
+        <li><a href="{% url 'social_post' %}">Social Life</a></li>
         <li><a href="{% url 'opportunity_post' %}">Opportunity</a></li>
         <li><a href="{% url 'business_post' %}">Business Hub</a></li>
         <li><a href="{% url 'admission_post' %}">Admission Info</a></li>
@@ -59,6 +59,7 @@
         <li><a href="{% url 'award_post' %}">Awards</a></li>
         <li><a href="{% url 'creative_writing_post' %}">Creative Writing</a></li>
         <li><a href="{% url 'general_post' %}">General</a></li>
+        <li><a href="{% url 'nysc_post' %}">NYSC</a></li>
     </ul>
     {% endblock %}
 </div>
@@ -85,7 +86,7 @@
     </p>
 {% else %}
     <p> Sign Up here!
-        Sign up through facebook <a href="{% provider_login_url 'facebook' method='oauth2' %}">Facebook Login</a>
+        Sign up through facebook <a href="{% provider_login_url "facebook" method="oauth2" %}">Facebook OAuth2</a>
         Sign up through google <a href="{% url 'google_login' %}">Google</a>
         Sign up with Instagram <a href="{% url 'instagram_login' %}">Instagram</a>
     </p>
@@ -100,6 +101,9 @@
 
 <p>
     haystack<a href="{% url 'haystack_search' %}">search</a>
+</p> 
+<p>
+    go to forum <a href="{% url 'list_and_create' %}">Forum</a>
 </p>
 
     <p>
